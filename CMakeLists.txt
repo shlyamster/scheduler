@@ -9,17 +9,12 @@ include(ExternalProject)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-#add_executable(example example.cpp)
-#target_link_libraries(example Threads::Threads)
-
 add_library(${PROJECT_NAME} INTERFACE)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_11)
 
 target_include_directories(${PROJECT_NAME} INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
-
-#set_target_properties(${PROJECT_NAME} PROPERTIES)
 
 install(TARGETS ${PROJECT_NAME} EXPORT BosmaSchedulerConfig
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
