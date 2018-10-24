@@ -31,14 +31,16 @@ Inspired by the [Rufus-Scheduler](https://github.com/jmettraux/rufus-scheduler) 
   s.every(1min, []() { std::cout << "every minute" << std::endl; });
 
   // https://en.wikipedia.org/wiki/Cron
-  s.cron("* * * * *", []() { std::cout << "top of every minute" << std::endl; });
+  s.cron("0 * * * * *", []() { std::cout << "top of every minute" << std::endl; });
+
+  s.cron("0 */2 * * * *", []() { std::cout << "top of every 2 minute" << std::endl; });
+
+  s.cron("0 5 0 * * *", []() { std::cout << "every day 5 minutes after midnight" << std::endl; });
 
   // Time formats supported:
   // %Y/%m/%d %H:%M:%S, %Y-%m-%d %H:%M:%S, %H:%M:%S
   // With only a time given, it will run tomorrow if that time has already passed.
   // But with a date given, it will run immediately if that time has already passed.
   s.at("2017-04-19 12:31:15", []() { std::cout << "at a specific time." << std::endl; });
-
-  s.cron("5 0 * * *", []() { std::cout << "every day 5 minutes after midnight" << std::endl; });
 ```
 See [example.cpp](example.cpp) for a full example.
