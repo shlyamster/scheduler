@@ -46,37 +46,15 @@ namespace Bosma {
 
     class CronTask : public Task {
     public:
-        CronTask(const std::string &expression, std::function<void()> &&f) : Task(std::move(f), true),
-                                                                             cron(expression) {}
+        CronTask(std::string expression, std::function<void()> &&f) : Task(std::move(f), true),
+                                                                       cron(cron::make_cron<cron::cron_standard_traits>(expression)) {}
 
         Clock::time_point get_new_time() const override {
-          return cron.cron_to_next();
-        };
-        Cron cron;
-    };
-
-    class NewCronTask : public Task {
-    public:
-        /*class BadCronExpression : public std::exception {
-        public:
-            explicit BadCronExpression(std::string msg) : msg_(std::move(msg)) {}
-
-            const char *what() const noexcept override { return (msg_.c_str()); }
-
-        private:
-            std::string msg_;
-        };*/
-
-        NewCronTask(std::string expression, std::function<void()> &&f) : Task(std::move(f), true),
-                                                                       exp(std::move(expression)) {}
-
-        Clock::time_point get_new_time() const override {
-          auto cron = cron::make_cron<cron::cron_standard_traits>(exp);
-          std::time_t now = std::time(0);
+          std::time_t now = Clock::to_time_t(Clock::now());
           return Clock::from_time_t(cron::cron_next(cron, now));
         };
 
-        std::string exp;
+        cron::cronexpr cron;
     };
 
     inline bool try_parse(std::tm &tm, const std::string &expression, const std::string &format) {
@@ -163,25 +141,18 @@ namespace Bosma {
 
 // expression format:
 // from https://en.wikipedia.org/wiki/Cron#Overview
-//    ┌───────────── minute (0 - 59)
-//    │ ┌───────────── hour (0 - 23)
-//    │ │ ┌───────────── day of month (1 - 31)
-//    │ │ │ ┌───────────── month (1 - 12)
-//    │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday)
-//    │ │ │ │ │
-//    │ │ │ │ │
-//    * * * * *
+//  ┌───────────── second (0-59)
+//  │ ┌───────────── minute (0 - 59)
+//  │ │ ┌───────────── hour (0 - 23)
+//  │ │ │ ┌───────────── day of month (1 - 31)
+//  │ │ │ │ ┌───────────── month (1 - 12)
+//  │ │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday)
+//  │ │ │ │ │ │
+//  │ │ │ │ │ │
+//  * * * * * *
         template<typename _Callable, typename... _Args>
         void cron(const std::string &expression, _Callable &&f, _Args &&... args) {
           std::shared_ptr<Task> t = std::make_shared<CronTask>(expression, std::bind(std::forward<_Callable>(f),
-                                                                                     std::forward<_Args>(args)...));
-          auto next_time = t->get_new_time();
-          add_task(next_time, std::move(t));
-        }
-
-        template<typename _Callable, typename... _Args>
-        void newcron(const std::string &expression, _Callable &&f, _Args &&... args) {
-          std::shared_ptr<Task> t = std::make_shared<NewCronTask>(expression, std::bind(std::forward<_Callable>(f),
                                                                                      std::forward<_Args>(args)...));
           auto next_time = t->get_new_time();
           add_task(next_time, std::move(t));
