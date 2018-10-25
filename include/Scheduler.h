@@ -47,7 +47,7 @@ namespace Bosma {
     class CronTask : public Task {
     public:
         CronTask(std::string expression, std::function<void()> &&f) : Task(std::move(f), true),
-                                                                       cron(cron::make_cron<cron::cron_standard_traits>(expression)) {}
+                                                                       cron(cron::make_cron(expression)) {}
 
         Clock::time_point get_new_time() const override {
           std::time_t now = Clock::to_time_t(Clock::now());
