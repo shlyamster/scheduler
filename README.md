@@ -1,9 +1,10 @@
-# Scheduler
-Modern C++ Header-Only Scheduling Library. Tasks run in thread pool. Requires C++11 and [ctpl_stl.h](https://github.com/vit-vit/CTPL) in the path.
+# scheduler
+
+Modern C++17 header-only scheduling library. Tasks run in thread pool.
 
 Inspired by the [Rufus-Scheduler](https://github.com/jmettraux/rufus-scheduler) gem. Offers mostly the same functionality.
 
-```C++
+```cpp
   #include "Scheduler.h"
 
   // number of tasks that can run simultaneously
@@ -43,4 +44,5 @@ Inspired by the [Rufus-Scheduler](https://github.com/jmettraux/rufus-scheduler) 
   // But with a date given, it will run immediately if that time has already passed.
   s.at("2017-04-19 12:31:15", []() { std::cout << "at a specific time." << std::endl; });
 ```
+
 See [example.cpp](example.cpp) for a full example.
