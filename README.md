@@ -5,7 +5,7 @@ Modern C++17 header-only scheduling library. Tasks run in thread pool.
 Inspired by the [Rufus-Scheduler](https://github.com/jmettraux/rufus-scheduler) gem. Offers mostly the same functionality.
 
 ```cpp
-  #include "Scheduler.h"
+  #include <scheduler/scheduler.hpp>
 
   // number of tasks that can run simultaneously
   // Note: not the number of tasks that can be added,
@@ -14,7 +14,7 @@ Inspired by the [Rufus-Scheduler](https://github.com/jmettraux/rufus-scheduler) 
 
   // Make a new scheduling object.
   // Note: s cannot be moved or copied
-  Bosma::Scheduler s(max_n_threads);
+  scheduler::Scheduler s(max_n_threads);
 
   // every second call message("every second")
   s.every(1s, message, "every second");
