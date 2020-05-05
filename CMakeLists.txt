@@ -11,14 +11,14 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/croncpp)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libs/ctpl)
 
 set(SOURCE_HEADERS
-    include/cron.hpp
-    include/interruptable_sleep.hpp
-    include/scheduler.hpp
+    ${PROJECT_NAME}/cron.hpp
+    ${PROJECT_NAME}/interruptable_sleep.hpp
+    ${PROJECT_NAME}/scheduler.hpp
 )
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(${PROJECT_NAME}
