@@ -1,0 +1,6 @@
+[submodule "libs/ctpl"]
+	path = libs/ctpl
+	url = https://github.com/shlyamster/ctpl.git
+[submodule "libs/croncpp"]
+	path = libs/croncpp
+	url = https://github.com/shlyamster/croncpp.git
