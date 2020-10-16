@@ -206,12 +206,14 @@ class Scheduler {
                         task->f();
                         // no risk of race-condition,
                         // add_task() will wait for manage_tasks() to release lock
-                        add_task(task->get_new_time(), task);
+                        if (!done) {
+                            add_task(task->get_new_time(), task);
+                        }
                     });
                 } else {
                     threads.push([task](int) { task->f(); });
                     // calculate time of next run and add the new task to the tasks to be recurred
-                    if (task->recur) {
+                    if (!done && task->recur) {
                         recurred_tasks.emplace(task->get_new_time(), std::move(task));
                     }
                 }
@@ -221,10 +223,8 @@ class Scheduler {
             tasks.erase(tasks.begin(), end_of_tasks_to_run);
 
             // re-add the tasks that are recurring
-            if (!done) {
-                for (auto &task : recurred_tasks) {
-                    tasks.emplace(task.first, std::move(task.second));
-                }
+            for (auto &task : recurred_tasks) {
+                tasks.emplace(task.first, std::move(task.second));
             }
         }
     }
